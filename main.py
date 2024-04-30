@@ -7,18 +7,18 @@ order_cost = 0.00
 order_number = 0
 pizza_orders = [[]]
 pizza_menu = {
-  "Beef & Onion" : 8.50,
+  "Beef Onion" : 8.50,
   "Extra Cheese" : 8.50,
   "Garlic Cheese" : 8.50,
   "Hawaiian" : 8.50,
+  "Italian" : 8.50,
   "Pepperoni" : 8.50,
   "Vegeterian" : 8.50,
-  "" : 8.50,
   "Gourmet Vegeterian" : 13.50,
   "Margherita" : 13.50,
   "Meatlovers" : 13.50,
   "Pepperoni Supreme" : 13.50,
-  "" : 13.50,
+  "Spicy Supreme" : 13.50,
 }
 
 '''Main Menu UI'''
