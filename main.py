@@ -7,20 +7,33 @@ order_cost = 0.00
 order_number = 0
 pizza_orders = []
 pizza_menu = {
-  "Beef Onion" : 8.50,
-  "Extra Cheese" : 8.50,
-  "Garlic Cheese" : 8.50,
-  "Hawaiian" : 8.50,
-  "Italian" : 8.50,
-  "Pepperoni" : 8.50,
-  "Vegeterian" : 8.50,
-  "Gourmet Vegeterian" : 13.50,
-  "Margherita" : 13.50,
-  "Meatlovers" : 13.50,
-  "Pepperoni Supreme" : 13.50,
-  "Spicy Supreme" : 13.50,
+  1 : ["Beef & Onion", 8.50],
+  2 : ["Extra Cheese", 8.50],
+  3 : ["Garlic Cheese", 8.50],
+  4 : ["Hawaiian", 8.50],
+  5 : ["Italian", 8.50],
+  6 : ["Pepperoni", 8.50],
+  7 : ["Vegeterian", 8.50],
+  8 : ["Gourmet Vegeterian", 13.50],
+  9 : ["Margherita", 13.50],
+  10 : ["Meatlovers", 13.50],
+  11 : ["Pepperoni Supreme", 13.50],
+  12 : ["Spicy Supreme", 13.50],
 }
 
+#Price calculator
+def price_calculator(price):
+  #Adding the price of whatever is added to the order to the order's total cost
+  cost = order_cost + price
+  #Making the order cost a global variable to be used outside of this function
+  return cost
+
+#
+def menu_order():
+  print("\n  -Pizza Menu-  \n")
+  for pizza in pizza_menu:
+    print()
+  
 '''Main Menu UI'''
 #Creating the main menu function
 def main_menu():
@@ -50,7 +63,7 @@ def pizza_order():
       pick_up_order()
 
     #Checking to see if the user wants to exit the order UI
-    if choice == "3":
+    elif choice == "3":
       print("\nReturning to the Main Menu")
       #Breaking the order UI loop
       break
@@ -68,8 +81,10 @@ def pick_up_order():
   order_number +=1
   #Adding the order number into a new list containing the order info
   pizza_orders.append([order_number])
+  #Taking the name for the pizza order and storing it in a variable
+  name = input("\nWho is this order for?").strip().title()
   #Adding the name the order is being made under into the new list
-  input =
+  pizza_orders[-1].append(name)
 
 #Creating the delivery order function
 def delivery_order():
@@ -81,8 +96,20 @@ def delivery_order():
   pizza_orders.append([order_number])
   #Adding the delivery fee to the order cost
   order_cost = price_calculator(delivery_fee)
+  #Taking the name for the pizza order and storing it in a variable
+  name = input("\nWho is this order for?\n>>> ").strip().title()
+  #Adding the name the order is being made under into the new list
+  pizza_orders[-1].append(name)
+  #Taking the address for the pizza order and storing it in a variable
+  address = input("What is the address for this order?\n>>> ").strip().title()
+  #Adding the address for the order into the new list
+  pizza_orders[-1].append(address)
+  #Taking the phone number for the pizza order and storing it in a variable
+  phone_number = input("What is the customer's phone number?\n>>> ").strip()
+  #Adding the phone number for the order into the new list
+  pizza_orders[-1].append(phone_number)
 
-  
+  print(pizza_orders[order_number-1])
   #Making the order cost a global variable to be used outside of this function
   return order_cost
     
@@ -95,13 +122,6 @@ def kitchen_screen():
 #Creating the management summary function
 def management_summary():
   print("a")
-
-#Price calculator
-def price_calculator(price):
-  #Adding the price of whatever is added to the order to the order's total cost
-  cost = order_cost + price
-  #Making the order cost a global variable to be used outside of this function
-  return cost
 
 '''Main routine'''
 #Creating a loop to allow the user to seamlessly navigate the program
@@ -117,7 +137,7 @@ while True:
     management_summary()
   elif user_choice == "4":
     #Printing a goodbye message and ending the loop and therefore the program if the user wants to exit
-    print("Bye")
+    print("\nThank you for choosing Crusty Pizza!")
     break
   #Checking to see if the user entered an invalid option
   else:
