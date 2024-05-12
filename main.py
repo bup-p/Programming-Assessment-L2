@@ -4,8 +4,10 @@ Assessment for L2 CompSci.'''
 #Defining important variables/constants/lists
 delivery_fee = 2.50
 order_cost = 0.00
+total_profit = 0.00
 order_number = 0
-pizza_orders = []
+pizzas_ordered = 0
+pizza_orders = [[]]
 pizza_menu = {
   1 : ["Beef & Onion", 8.50],
   2 : ["Extra Cheese", 8.50],
@@ -39,6 +41,10 @@ def main_menu():
 '''Ordering'''
 #Creating the main order function
 def pizza_order():
+  #Making sure the program knows the order cost variable is global and not local (it is used outside of the function, and not just inside.)
+  global order_cost
+  #Making sure the customer order variable is bound
+  customer_order = []
   #Creating a loop to allow the user to create multiple pizza order
   while True:
     #Taking input from the user as to what they want to do
@@ -56,8 +62,6 @@ def pizza_order():
       #Adding the address to the current order
       customer_order.append(address)
 
-      #Run menu_order here and stuff
-
     #Checking to see if the user wants to create a pick-up order
     elif choice == "2":
       print("\nPick-up Selected")
@@ -74,6 +78,23 @@ def pizza_order():
     else:
       #Printing an error message
       print("\nInvalid input")
+
+    pizza_order, cost, pizza_amount = menu_order()
+    global pizzas_ordered
+    global total_profit
+    pizzas_ordered = pizzas_ordered + pizza_amount
+    total_profit = total_profit + cost
+    order_cost = price_calculator(cost)
+    customer_order.append(pizza_order)
+    print("\nOrder Confirmed!")
+    if choice == "1":
+      print("{}. {} - {}\n{}".format(customer_order[0], customer_order[1], customer_order[2], customer_order[3]))
+    elif choice == "2":
+      print("{}. {} - {}".format(customer_order[0], customer_order[1], customer_order[2]))
+    for pizzas in pizza_order:
+      print(pizzas)
+    print("Total: ${:.2f}".format(order_cost))
+    return customer_order
 
 #Creating the user order function
 def user_order():
@@ -153,14 +174,14 @@ def menu_order():
 def kitchen_screen():
   print("\n  -Kitchen Screen-  \n")
   for i in range(len(pizza_orders)):
-    print("{}. ")
+    print(pizza_orders[i][0:-2], sep = "")
 
 '''Management Summary UI'''
 #Creating the management summary function
 def management_summary():
   print("\n  -Management Summary-  \n")
-  print("Pizzas Sold: {}")
-  print("Total Sales: {}")
+  print("Pizzas Sold: {}".format(pizzas_ordered))
+  print("Total Sales: {:.2f}".format(total_profit))
 
 '''Main routine'''
 #Creating a loop to allow the user to seamlessly navigate the program
@@ -169,7 +190,7 @@ while True:
   user_choice = main_menu()
   #Checking to see what the user wants to do and running the corresponding function
   if user_choice == "1":
-    pizza_order()
+    pizza_orders.append([pizza_order()])
   elif user_choice == "2":
     kitchen_screen()
   elif user_choice == "3":
@@ -181,4 +202,4 @@ while True:
   #Checking to see if the user entered an invalid option
   else:
     #Printing an error message
-   print("\nInvalid input")
+   print("\nError: Invalid input")
