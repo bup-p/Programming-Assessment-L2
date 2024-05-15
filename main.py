@@ -3,6 +3,7 @@ Assessment for L2 CompSci.'''
 
 # Defining important variables/constants/lists
 DELIVERY_FEE = 2.50
+MAX_PIZZAS = 5
 total_profit = 0.00
 order_number = 0
 pizzas_ordered = 0
@@ -150,12 +151,12 @@ def menu_order():
       # Making the amount entered an integer
       pizza_amount = int(amount)
       # Checking to see if they ordered up to the order limit
-      if pizza_amount > 0 <= 5:
+      if pizza_amount > 0 <= MAX_PIZZAS:
         # Breaking the loop
         break
       else:
         # Printing an apology message
-        print("\nSorry, we have an order limit of 5 pizzas.")
+        print("\nSorry, we have an order limit of {} pizzas.".format(MAX_PIZZAS))
     else:
       # Printing an error message
       print("\nError: Please enter a number!")
