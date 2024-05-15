@@ -3,11 +3,10 @@ Assessment for L2 CompSci.'''
 
 #Defining important variables/constants/lists
 delivery_fee = 2.50
-order_cost = 0.00
 total_profit = 0.00
 order_number = 0
 pizzas_ordered = 0
-pizza_orders = [[]]
+pizza_orders = []
 pizza_menu = {
   1 : ["Beef & Onion", 8.50],
   2 : ["Extra Cheese", 8.50],
@@ -24,7 +23,7 @@ pizza_menu = {
 }
 
 #Creating the price calculator function
-def price_calculator(price):
+def price_calculator(order_cost, price):
   #Adding the price of whatever is added to the order to the order's total cost
   cost = order_cost + price
   #Making the order cost a global variable to be used outside of this function
@@ -41,9 +40,9 @@ def main_menu():
 '''Ordering'''
 #Creating the main order function
 def pizza_order():
-  #Making sure the program knows the order cost variable is global and not local (it is used outside of the function, and not just inside.)
-  global order_cost
-  #Making sure the customer order variable is bound
+  #Making sure the program knows the order number variable is global and not local (it is used outside of the function, and not just inside.)
+  global order_number
+  order_cost = 0.00
   customer_order = []
   #Creating a loop to allow the user to create multiple pizza order
   while True:
@@ -53,77 +52,73 @@ def pizza_order():
     #Checking to see if the user wants to create a delivery order
     if choice == "1":
       print("\nDelivery Selected")
-      #Running the order function
-      customer_order = user_order()
+      #Increasing the order number by 1 so each order number is unique and ordered
+      order_number += 1
+      #Taking the name for the pizza order and storing it in a variable
+      name = input("\nWho is this order for?\n>>> ").strip().title()
+      #Taking the phone number for the pizza order and storing it in a variable
+      phone_number = input("\nWhat is the customer's phone number?\n>>> ").strip()
       #Taking the address for the pizza order and storing it in a variable
       address = input("\nWhat is the address for this order?\n>>> ").strip().title()
       #Adding the delivery fee to the order cost
-      order_cost = price_calculator(delivery_fee)
-      #Adding the address to the current order
-      customer_order.append(address)
+      order_cost = price_calculator(order_cost, delivery_fee)
+      #Adding the order number, name, phone number and address to the customer's current order list
+      customer_order.extend([order_number, name, phone_number, address])
+      break
 
     #Checking to see if the user wants to create a pick-up order
     elif choice == "2":
       print("\nPick-up Selected")
-      #Running the order function
-      customer_order = user_order()
+      #Increasing the order number by 1 so each order number is unique and ordered
+      order_number += 1
+      #Taking the name for the pizza order and storing it in a variable
+      name = input("\nWho is this order for?\n>>> ").strip().title()
+      #Adding the order number and name to the customer's current order list
+      customer_order.extend([order_number, name,])
+      break
 
     #Checking to see if the user wants to exit the order UI
     elif choice == "3":
-      print("\nReturning to the Main Menu")
+      print("\nReturning to the Main Menu...")
       #Breaking the order UI loop
       break
       
     #Checking to see if the user entered an invalid option
     else:
       #Printing an error message
-      print("\nInvalid input")
-
+      print("\nError: Invalid option!")
+  
+  while True:
+    if choice == "3":
+      break
     pizza_order, cost, pizza_amount = menu_order()
     global pizzas_ordered
     global total_profit
-    pizzas_ordered = pizzas_ordered + pizza_amount
-    total_profit = total_profit + cost
-    order_cost = price_calculator(cost)
-    customer_order.append(pizza_order)
+    pizzas_ordered += pizza_amount
+    total_profit += cost
+    order_cost = price_calculator(order_cost, cost)
+    customer_order.extend(pizza_order)
     print("\nOrder Confirmed!")
     if choice == "1":
       print("{}. {} - {}\n{}".format(customer_order[0], customer_order[1], customer_order[2], customer_order[3]))
     elif choice == "2":
-      print("{}. {} - {}".format(customer_order[0], customer_order[1], customer_order[2]))
+      print("{}. {}".format(customer_order[0], customer_order[1]))
     for pizzas in pizza_order:
       print(pizzas)
     print("Total: ${:.2f}".format(order_cost))
     return customer_order
 
-#Creating the user order function
-def user_order():
-  #Making sure the program knows the order number variable is global and not local (it is used outside of the function, and not just inside.)
-  global order_number
-  #Creating a new list to store the current order in
-  customer_order = []
-  #Increasing the order number by 1 so each order number is unique and ordered
-  order_number += 1
-  #Taking the name for the pizza order and storing it in a variable
-  name = input("\nWho is this order for?\n>>> ").strip().title()
-  #Taking the phone number for the pizza order and storing it in a variable
-  phone_number = input("\nWhat is the customer's phone number?\n>>> ").strip()
-  #Adding the order number, name and phone number to the customer's current order list
-  customer_order.append([order_number, name, phone_number])
-  #Making customer_order a global list to be used outside of this function
-  return customer_order
-
 #Creating the menu/pizza ordering function
 def menu_order():
-  print("\n  -Pizza Menu-  \n")
+  print("\n---Pizza Menu---\n")
   #Printing each menu item and its price until we reach the end of the dictionary
   for number, pizza in pizza_menu.items():
-    print("{}. {}{}".format(number, pizza[0], pizza[1]))
+    print("{}. {} ${:.2f}".format(number, pizza[0], pizza[1]))
   while True:
     #Asking the customer how many pizzas they want to order
     amount = input("\nHow many pizzas would you like to order?\n>>> ").strip()
     #Checking to see if a real number was entered
-    if amount.isdigit:
+    if amount.isdigit is True:
       #Making the amount entered an integer
       pizza_amount = int(amount)
       #Checking to see if they ordered up to the order limit
@@ -156,7 +151,7 @@ def menu_order():
           #Adding their chosen pizza into their order
           pizza_order.append(pizza_menu[choice_int][0])
           #Adding the price of the pizza to the order's total cost
-          cost = cost + pizza_menu[choice_int][1]
+          cost += pizza_menu[choice_int][1]
           #Adding one to the number of pizzas ordered
           number_of_pizzas += 1
         else:
@@ -172,16 +167,17 @@ def menu_order():
 '''Kitchen Screen UI'''
 #Creating the kitchen screen function
 def kitchen_screen():
-  print("\n  -Kitchen Screen-  \n")
-  for i in range(len(pizza_orders)):
-    print(pizza_orders[i][0:-2], sep = "")
+  print("\n---Kitchen Screen---\n")
+  for order in pizza_orders:
+    print("---Order {}---\n".format(order[0]))
+    print(*order, sep=" ")
 
 '''Management Summary UI'''
 #Creating the management summary function
 def management_summary():
-  print("\n  -Management Summary-  \n")
+  print("\n---Management Summary---\n")
   print("Pizzas Sold: {}".format(pizzas_ordered))
-  print("Total Sales: {:.2f}".format(total_profit))
+  print("Total Sales: ${:.2f}".format(total_profit))
 
 '''Main routine'''
 #Creating a loop to allow the user to seamlessly navigate the program
@@ -190,7 +186,8 @@ while True:
   user_choice = main_menu()
   #Checking to see what the user wants to do and running the corresponding function
   if user_choice == "1":
-    pizza_orders.append([pizza_order()])
+    customer_order = pizza_order()
+    pizza_orders.append(customer_order)
   elif user_choice == "2":
     kitchen_screen()
   elif user_choice == "3":
@@ -202,4 +199,4 @@ while True:
   #Checking to see if the user entered an invalid option
   else:
     #Printing an error message
-   print("\nError: Invalid input")
+    print("\nError: Invalid option!")
