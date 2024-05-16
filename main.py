@@ -36,7 +36,8 @@ def price_calculator(order_cost, price):
 # Creating the main menu function
 def main_menu():
   '''Displays the main menu and allows the user to chose what they want to do.
-  Returns their choice to be used outside of this function.'''
+  Returns their choice to be used outside of this function.
+  '''
   # Taking input from the user as to what they want to do
   choice = input("\n---Main Menu---\n\n 1. Create Order\n 2. Kitchen Screen\n 3. Management Summary\n 4. Exit\n\n>>> ").strip()
   # Making choice a global variable to be used outside of this function
@@ -47,7 +48,8 @@ def main_menu():
 # Creating the main order function
 def pizza_order():
   '''Allows the user to place their delivery or pick-up order.
-  Returns their pizza order to be used outside of this function.'''
+  Returns their pizza order to be used outside of this function.
+  '''
   # Making sure the program knows the order number variable is global and not local
   global order_number
   order_cost = 0.00
@@ -127,8 +129,16 @@ def pizza_order():
       print("{}. {}".format(customer_order[0], customer_order[1]))
     # Using a for loop to run through each pizza the customer ordered
     for pizzas in pizza_order:
-      # Printing the name of the pizza
-      print(pizzas)
+      # Using a for loop to run through each pizza in the pizza menu
+      for key, value in pizza_menu.items():
+        # Checking to see if the current pizza is the same as the one the customer ordered
+        if pizzas in value:
+          # Storing the pizza ID (the dicitonary key) in a variable
+          id = key
+          # Printing the name and price of each pizza
+          print("{} - ${:.2f}".format(pizzas, pizza_menu[id][1]))
+          # Ending the loop since the pizza has been found
+          break
     # Printing the total cost of the order
     print("Total: ${:.2f}".format(order_cost))
     # Returning the customer_order list to be used outside of this function
@@ -138,7 +148,8 @@ def pizza_order():
 # Creating the menu/pizza ordering function
 def menu_order():
   '''Prints out the pizza menu and allows the user to select how many and which pizza(s) they want to order.
-  Returns their pizza choice(s) to be used outside of this function.'''
+  Returns their pizza choice(s) to be used outside of this function.
+  '''
   print("\n---Pizza Menu---\n")
   # Printing each menu item and its price until we reach the end of the dictionary
   for number, pizza in pizza_menu.items():
@@ -146,49 +157,35 @@ def menu_order():
   while True:
     # Asking the customer how many pizzas they want to order
     amount = input("\nHow many pizzas would you like to order?\n>>> ").strip()
-    # Checking to see if a real number was entered
-    if amount.isdigit is True:
-      # Making the amount entered an integer
-      pizza_amount = int(amount)
-      # Checking to see if they ordered up to the order limit
-      if pizza_amount > 0 <= MAX_PIZZAS:
-        # Breaking the loop
-        break
-      else:
-        # Printing an apology message
-        print("\nSorry, we have an order limit of {} pizzas.".format(MAX_PIZZAS))
+    # Checking to see if a real number below the order limit was entered
+    if amount.isdigit() and 0 < int(amount) <= MAX_PIZZAS:
+      break
     else:
       # Printing an error message
-      print("\nError: Please enter a number!")
+      print("\nError: Please enter a number below our order limit of {}!".format(MAX_PIZZAS))
 
   # Defining important local variables
-  number_of_pizzas = 0
+  pizzas_chosen = 0
   pizza_order = []
   cost = 0.00
 
-  # Creating a for loop to run until the user has ordered each of their pizzas
-  for i in range(pizza_amount):
+  # Creating a while loop to run until the user has ordered each of their pizzas
+  while pizzas_chosen < int(amount):
     # Asking which pizza they want to order
     choice = input("\nPlease select your pizza.\n>>> ").strip()
-    # Checking to see if they entered a real number
-    if choice.isdigit is True:
-      # Making the choice an integer
-      choice_int = int(choice)
-      # Checking to see if the entered number is a valid menu item
-      if choice_int in pizza_menu:
-        # Adding their chosen pizza into their order
-        pizza_order.append(pizza_menu[choice_int][0])
-        # Adding the price of the pizza to the order's total cost
-        cost += pizza_menu[choice_int][1]
-      else:
-          # Printing an error message
-          print("\nError: Invalid option!")
+    # Checking to see if they entered a real number and valid menu item
+    if choice.isdigit() and int(choice) in pizza_menu:
+      pizzas_chosen += 1
+      # Adding their chosen pizza into their order
+      pizza_order.append(pizza_menu[int(choice)][0])
+      # Adding the price of the pizza to the order's total cost
+      cost += pizza_menu[int(choice)][1]
     else:
       # Printing an error message
-      print("\nError: Please enter a number!")
-  
+      print("\nError: Please enter a valid pizza ID number!")
+
   # Returning the pizza order, cost and pizza amount to be used outside of this function
-  return pizza_order, cost, pizza_amount
+  return pizza_order, cost, int(amount)
 
 '''Kitchen Screen UI'''
 # Creating the kitchen screen function
